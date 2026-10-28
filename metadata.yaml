@@ -1,8 +1,33 @@
 name: astrbot_plugin_coop_bridge
 display_name: AstrBot×Coopanion 桥接
-desc: 多身份绑定 + 主动消息双发 + Coopanion 记忆检索桥。分期演进，当前版本 M8：身份绑定 + 机器配对 + 主动消息双发 + 记忆检索 + 对话回传 + 叫不应就凑过来 + 活动感知。
+short_desc: 把 Coopanion 桌宠接进 AstrBot：记忆检索、主动消息双发、远程推送
+desc: |
+  把 AstrBot 的记忆、主动消息、活动感知接到 Coopanion 桌宠上，让桌宠真的知道你在跟谁聊天、记得你说过什么。
+
+  主要能力：
+
+  - 身份绑定与多机配对：私聊首次接触进入绑定流程，回「确认」钉住身份；发「配对」拿 8 位配对码，多台桌宠各自配对互不干扰
+  - 主动消息双发：AstrBot 的主动消息同时推给 QQ 和桌宠，桌宠直接冒泡说出来，不用等你先开口
+  - 记忆检索：读 livingmemory / angel_memory / self_learning 的记忆库，供桌宠按需查询
+  - 对话回传：桌宠说的话能回写进 AstrBot 对话
+  - 远程推送：在 QQ 上让桌宠去做事，结果回 QQ
+  - 活动感知：桌宠在刷视频、离开、玩游戏时汇总成一条动态
+
+  注意：本插件不是独立工作的，需要配套的 Coopanion 扩展 cortico-world-astrbot（桌宠扩展主体）与 cortico-world-web（网页/接口取数）。
+  完整安装步骤、排错清单见 https://github.com/aldebaranmm/coopanion-astrbot-bridge 。
+
+  记忆源至少要装一个（livingmemory / angel_memory / self_learning），否则 recall 永远查不到东西——插件不会报错，这是最容易以为"装坏了"的坑。
 help: 私聊首次接触自动进入身份绑定流程，回复「确认」钉住协议层 QQ 号；已绑定后可发「配对」「我的设备」「取消配对 名字」。
-version: v0.9.1
+version: 0.9.2
 author: Kaiser
 repo: https://github.com/aldebaranmm/astrbot_plugin_coop_bridge
 astrbot_version: ">=4.26"
+support_platforms:
+  - aiocqhttp
+  - qq_official
+social_link: https://github.com/aldebaranmm
+tags:
+  - 桌宠
+  - 主动消息
+  - 记忆
+  - 桥接

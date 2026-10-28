@@ -1,6 +1,18 @@
 # astrbot_plugin_coop_bridge
 
-AstrBot × Coopanion 桥接插件（开发中，当前 M4，含 M3 双发）。
+AstrBot × Coopanion 桥接插件（**服务端**）。
+
+把 AstrBot 的记忆、主动消息、活动感知接到 Coopanion 桌宠上。
+当前版本 `v0.9.1`：身份绑定 + 机器配对 + 主动消息双发 + 记忆检索 + 对话回传 + 叫不应就凑过来 + 活动感知（M8），另含 M13 远程推送。
+
+**配套客户端**（装在同一套里的另外两个）：
+
+- [cortico-world-astrbot](https://github.com/aldebaranmm/cortico-world-astrbot) —— 桌宠扩展主体
+- [cortico-world-web](https://github.com/aldebaranmm/cortico-world-web) —— 网页/接口取数
+- [总览 + 完整安装步骤](https://github.com/aldebaranmm/coopanion-astrbot-bridge)
+
+> 消息是**客户端主动来拉**的（`GET /bridge/inbox`，默认 20 秒一次），
+> 不是本插件主动推给客户端。所以本插件**不需要、也没有**"客户端地址"这类配置。
 
 ## 分期
 
@@ -57,8 +69,20 @@ AstrBot × Coopanion 桥接插件（开发中，当前 M4，含 M3 双发）。
 | `GET /bridge/identity` | 令牌 | 该机器所属身份（QQ 号打码）、昵称 |
 | `POST /bridge/recall` | 令牌 | 检索记忆：`{"query":"...","limit":20}` |
 | `GET /bridge/inbox` | 令牌 | 拉取待推送的主动消息（M3 写入） |
+| `POST /bridge/push` | 令牌 | 往该身份队列塞一条（远程下发指令/手动测试） |
+| `POST /bridge/chat` | 令牌 | 客户端回传对话：`{"items":[{"user":"...","assistant":"..."}]}` |
+| `GET` / `POST /bridge/activity` | 令牌 | 读取 / 上报「主人在干嘛」（前台窗口、空闲时长） |
+| `POST /bridge/video` | 令牌 | 刷视频结果上报。**卡片必须带 `text` 字段**，否则会静默丢弃（返回 `accepted:0`） |
+| `POST /bridge/douyin` | 令牌 | 抖音结果上报 |
 
 令牌通过 `Authorization: Bearer <token>` 或 `X-Bridge-Token: <token>` 传入。
+
+### 怎么判断插件加载成功
+
+```bash
+curl http://127.0.0.1:6190/bridge/health      # 200 = 服务在跑
+curl http://127.0.0.1:6190/bridge/identity    # 401 = 端点已注册（正常）；404 = 插件没加载
+```
 
 ### 检索数据源
 
@@ -77,4 +101,8 @@ AstrBot × Coopanion 桥接插件（开发中，当前 M4，含 M3 双发）。
 
 ## 安装（需用户批准）
 
-将本目录复制到 AstrBot 实例的 `data/plugins/` 下，重载插件。
+将本目录复制到 AstrBot 实例的 `data/plugins/` 下，**重启 AstrBot 实例**才生效
+（仪表盘里的"重载"对新装的代码无效）。
+
+装好后用上面的 `/bridge/health` 确认。默认只监听 `127.0.0.1:6190`，
+别的机器要连请用 frp 穿透，别把端口直接暴露到公网。

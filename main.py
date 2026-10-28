@@ -36,7 +36,7 @@ from .core.proactive import (
     uninstall as uninstall_proactive_hook,
 )
 from .core.server import BridgeServer
-from .core.store import BridgeStore
+from .core.store import BridgeStore, migrate_legacy_kv
 
 CONFIRM_WORD = "确认"
 REJECT_WORD = "不是"
@@ -45,7 +45,7 @@ UNBIND_CONFIRM_WORD = "确认解绑"
 PAIR_WORD = "配对"
 DEVICES_WORD = "我的设备"
 REVOKE_WORD = "取消配对"
-VERSION = "0.9.2"
+VERSION = "0.9.3"
 
 def _strip_clock(text: str) -> str:
     """去掉 HH:MM 这样的时间片段，好比较两段活动文案是不是一回事。"""
@@ -161,6 +161,11 @@ class CoopBridgePlugin(star.Star):
 
     async def initialize(self):
         """加载、重载插件时触发。"""
+        # 作者改过名的话，旧命名空间下的身份/机器令牌会读不到，先尝试搬过来
+        try:
+            await migrate_legacy_kv(getattr(self, "plugin_id", ""), logger.info)
+        except Exception as exc:
+            logger.warning("[coop_bridge] 旧数据迁移失败（不影响启动）：%s", exc)
         started = await self.server.start()
         self._running = True
         asyncio.create_task(self._watch_deferred())

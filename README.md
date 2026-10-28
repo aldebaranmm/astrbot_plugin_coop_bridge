@@ -14,6 +14,43 @@ AstrBot × Coopanion 桥接插件（**服务端**）。
 > 消息是**客户端主动来拉**的（`GET /bridge/inbox`，默认 20 秒一次），
 > 不是本插件主动推给客户端。所以本插件**不需要、也没有**"客户端地址"这类配置。
 
+## 配套的 AstrBot 插件
+
+本插件**不是独立工作的**，下面这些决定它能发挥多少功能。
+
+### 强烈建议装：主动消息
+
+| 插件 | 不装会怎样 |
+| --- | --- |
+| [astrbot_plugin_proactive_chat](https://github.com/Pancakes-Labs/astrbot_plugin_proactive_chat) | **M3 双发静默跳过** —— 主动消息只发到 QQ，桌宠不会冒泡。其余功能（绑定 / 配对 / 检索 / 远程推送）照常能用 |
+
+装了之后还要配两处，否则桌宠仍然不会开口：
+
+1. 在它的配置里把要收到主动消息的人加进私聊白名单 `friend_settings.session_list`
+2. 客户端的 `wakeMode` 设为 `flush`（`piggyback` 会攒着，等你先跟桌宠说话才冒出来）
+
+### 记忆数据源（至少装一个）
+
+`POST /bridge/recall` 从下面三个插件读记忆，**装哪个读哪个，可以都装**：
+
+| 插件 | 提供什么 |
+| --- | --- |
+| [astrbot_plugin_livingmemory](https://github.com/lxfight-s-Astrbot-Plugins/astrbot_plugin_livingmemory) | 事实 / 主题记忆（主力） |
+| [astrbot_plugin_angel_memory](https://github.com/kawayiYokami/astrbot_plugin_angel_memory) | 判断类记忆 |
+| [astrbot_plugin_self_learning](https://github.com/NickCharlie/astrbot_plugin_self_learning) | 个人记忆 + 黑话词典 |
+
+一个都不装的话，`recall` 只会返回空 —— **插件不报错，就是查不到东西**。
+用 `GET /bridge/health` 能看到每个源是否 `available`。
+
+### 参考配置（作者实机）
+
+```
+astrbot_plugin_proactive_chat   v1.2.6
+astrbot_plugin_livingmemory     2.8.2
+astrbot_plugin_angel_memory     2.0.4
+astrbot_plugin_self_learning    4.4.3
+```
+
 ## 分期
 
 | 版本 | 内容 | 状态 |

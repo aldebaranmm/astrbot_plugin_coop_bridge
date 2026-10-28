@@ -45,7 +45,7 @@ UNBIND_CONFIRM_WORD = "确认解绑"
 PAIR_WORD = "配对"
 DEVICES_WORD = "我的设备"
 REVOKE_WORD = "取消配对"
-VERSION = "0.9.1"
+VERSION = "0.9.2"
 
 def _strip_clock(text: str) -> str:
     """去掉 HH:MM 这样的时间片段，好比较两段活动文案是不是一回事。"""

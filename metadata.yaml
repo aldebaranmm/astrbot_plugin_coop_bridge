@@ -1,0 +1,7 @@
+name: astrbot_plugin_coop_bridge
+display_name: AstrBot×Coopanion 桥接
+desc: 多身份绑定 + 主动消息双发 + Coopanion 记忆检索桥。分期演进，当前版本 M8：身份绑定 + 机器配对 + 主动消息双发 + 记忆检索 + 对话回传 + 叫不应就凑过来 + 活动感知。
+help: 私聊首次接触自动进入身份绑定流程，回复「确认」钉住协议层 QQ 号；已绑定后可发「配对」「我的设备」「取消配对 名字」。
+version: v0.9.1
+author: Kaiser
+astrbot_version: ">=4.26"

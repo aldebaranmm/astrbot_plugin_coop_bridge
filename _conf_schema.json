@@ -1,0 +1,170 @@
+{
+  "enabled": {
+    "description": "启用桥接插件",
+    "type": "bool",
+    "default": true
+  },
+  "bind_pending_ttl": {
+    "description": "绑定/解绑待确认状态的有效期（秒），超时需重新触发",
+    "type": "int",
+    "default": 1800
+  },
+  "bind_prompt": {
+    "description": "首次接触时的绑定提示语，{qq} 会替换为协议层识别到的 QQ 号",
+    "type": "text",
+    "default": "第一次见。我识别到你是 {qq}（这个号码来自 QQ 协议层，伪造不了）。如果没错，回复「确认」完成绑定；如果不是你，回复「不是」。"
+  },
+  "bind_done_text": {
+    "description": "绑定成功提示语",
+    "type": "text",
+    "default": "绑定完成，{qq}。之后我就认得你了。想解除绑定的话，私聊发「解绑」。"
+  },
+  "bind_reject_text": {
+    "description": "用户否认身份时的回复",
+    "type": "text",
+    "default": "好的，已取消。下次再聊到的话，重新确认一次就行。"
+  },
+  "unbind_prompt": {
+    "description": "解绑二次确认提示语",
+    "type": "text",
+    "default": "解绑会注销这个身份和它名下的所有设备配对。确认请回复「确认解绑」，其他任何消息取消。"
+  },
+  "unbind_done_text": {
+    "description": "解绑完成提示语，{devices} 会替换为被吊销的设备数量",
+    "type": "text",
+    "default": "已解绑。这个身份的所有绑定信息已清除（同时吊销了 {devices} 台设备）。"
+  },
+  "pair_code_ttl": {
+    "description": "配对码有效期（秒），仅用于提示文案，实际由插件常量控制",
+    "type": "int",
+    "default": 600
+  },
+  "pair_code_text": {
+    "description": "下发配对码的文案，{code} 为配对码，{minutes} 为有效分钟数",
+    "type": "text",
+    "default": "配对码：{code}\n{minutes} 分钟内有效，只能用一次。\n在你那台电脑的 Coopanion 桥接设置里填上它，就能连上我。"
+  },
+  "device_list_text": {
+    "description": "设备列表文案，{count} 为数量，{lines} 为逐台明细",
+    "type": "text",
+    "default": "你名下共 {count} 台设备：\n{lines}\n要吊销某台，发「取消配对 名字」。"
+  },
+  "device_empty_text": {
+    "description": "还没有任何设备时的回复",
+    "type": "text",
+    "default": "还没有配对的电脑。发「配对」拿一个码，在电脑上填进去就行。"
+  },
+  "revoke_need_name_text": {
+    "description": "「取消配对」未带名字时的追问，{names} 为当前设备名列表",
+    "type": "text",
+    "default": "要吊销哪台？发「取消配对 名字」。当前的：{names}"
+  },
+  "revoke_miss_text": {
+    "description": "按名字找不到设备时的回复",
+    "type": "text",
+    "default": "没找到叫「{name}」的设备，发「我的设备」看看列表。"
+  },
+  "revoke_done_text": {
+    "description": "吊销成功回复，{name} 为设备名",
+    "type": "text",
+    "default": "已吊销「{name}」。这台电脑要重新连，得再配对一次。"
+  },
+  "proactive_dual_send": {
+    "description": "M3：主动消息在发往 QQ 的同时抄送一份给该身份的 Coopanion（仅私聊、仅已绑定身份）",
+    "type": "bool",
+    "default": true
+  },
+  "server_enabled": {
+    "description": "是否启动 M4 桥接 HTTP 服务（Coopanion 靠它取数据）",
+    "type": "bool",
+    "default": true
+  },
+  "server_port": {
+    "description": "桥接服务端口（独立端口，不经仪表盘；frp 只穿这一个）",
+    "type": "int",
+    "default": 6190
+  },
+  "server_bind": {
+    "description": "监听地址。保持 127.0.0.1 最安全，公网访问交给 frp 隧道",
+    "type": "string",
+    "default": "127.0.0.1"
+  },
+  "astrbot_data_dir": {
+    "description": "AstrBot 的 data 目录绝对路径。留空则按插件位置自动推断",
+    "type": "string",
+    "default": ""
+  },
+  "recall_limit": {
+    "description": "单次检索默认返回条数上限（1-50）",
+    "type": "int",
+    "default": 20
+  },
+  "include_group_memory": {
+    "description": "检索时是否并入群聊中与该身份直接相关的记忆（按 QQ 号过滤，不会泄漏他人发言）",
+    "type": "bool",
+    "default": true
+  },
+  "src_livingmemory": {
+    "description": "检索 livingmemory 的事实记忆（主力数据源）",
+    "type": "bool",
+    "default": true
+  },
+  "src_angel_memory": {
+    "description": "检索 angel_memory 的判断类记忆",
+    "type": "bool",
+    "default": true
+  },
+  "src_self_learning": {
+    "description": "检索 self_learning 的记忆与黑话词典",
+    "type": "bool",
+    "default": true
+  },
+  "mirror_memory": {
+    "description": "对话回传时同时写进 livingmemory",
+    "type": "bool",
+    "hint": "开着：桌宠里聊过的内容会进 livingmemory 的记忆图谱，之后能检索到。关掉：只写进 AstrBot 会话历史。没装 livingmemory 时自动跳过，不影响其它功能。",
+    "default": true
+  },
+  "stunt_enabled": {
+    "description": "叫不应就让桌宠搞事",
+    "type": "bool",
+    "hint": "连续几次主动说话都没回复时，让它做点动作引起注意（按 Win 键 / 来回切窗口 / 凑到你鼠标旁边）。动作由它自己的电脑操作工具执行。",
+    "default": true
+  },
+  "stunt_after": {
+    "description": "几次没回复后开始搞事",
+    "type": "int",
+    "hint": "默认 2 次。至少 2，避免第一次没回就动手。",
+    "default": 2
+  },
+  "defer_in_game": {
+    "description": "玩游戏时先攒着，关掉再补发",
+    "type": "bool",
+    "hint": "开启后：想搞事时如果检测到 Steam 游戏在跑，就不打扰，等游戏退出后再把这句话（AstrBot 按人格生成的原文）补发到桌宠。攒着的话最多留 30 分钟，超时丢弃。",
+    "default": true
+  },
+  "stunt_repeat": {
+    "description": "没回复就一直走过来",
+    "type": "bool",
+    "hint": "开启后：桌宠第一次走过来还会说句话；之后每隔 45 秒再走一次，直到你回复为止（只走路，不重复说话）。最长持续 15 分钟自动停。",
+    "default": true
+  },
+  "activity_enabled": {
+    "description": "回话时参考「主人在干什么」",
+    "type": "bool",
+    "hint": "开着：AstrBot 回话前会拿到一条本机活动摘要（前台窗口标题、空闲多久、可选的文件名），于是能自然提到你在写代码/看视频。数据只在本机，不对外发送。关掉就完全不注入。",
+    "default": true
+  },
+  "activity_digest": {
+    "description": "把「主人在干什么」汇总进记忆",
+    "type": "bool",
+    "hint": "开着：每隔一段时间把这段时间的活动压成一句（比如「凌晨 4:00–4:30 一直在用 VS Code」）写进 livingmemory，以后能回忆起你的作息。不是每 60 秒记一条流水账。关掉就完全不留痕。",
+    "default": true
+  },
+  "activity_digest_minutes": {
+    "description": "汇总间隔（分钟）",
+    "type": "int",
+    "hint": "默认 30 分钟。太短会把记忆冲成日志，太长又记不清细节。范围 10~180。",
+    "default": 30
+  }
+}

@@ -184,3 +184,45 @@ class BridgeStore:
 
     async def raw_put(self, key: str, value: Any) -> None:
         await self._put(key, value)
+
+
+# 作者改名会让 AstrBot 的插件 KV 命名空间跟着变（{作者}/{插件名}，转小写），
+# 旧命名空间下的身份和机器令牌会"凭空消失"，桌宠随即被 401。
+# 这里做一次性迁移：当前空间**没有**数据时才从旧空间搬，绝不覆盖现有记录。
+LEGACY_PLUGIN_IDS = ("workbuddy/astrbot_plugin_coop_bridge",)
+MIGRATE_KEYS = ("identities", "devices", "pair_codes")
+
+
+async def migrate_legacy_kv(plugin_id: str, log=None) -> None:
+    """把旧命名空间的数据搬到当前命名空间；失败只记日志，不影响插件启动。"""
+    if not plugin_id:
+        return
+    try:
+        from astrbot.core import sp
+    except Exception:
+        return
+    for key in MIGRATE_KEYS:
+        try:
+            if await sp.get_async("plugin", plugin_id, key, None):
+                continue
+        except Exception:
+            continue
+        for legacy in LEGACY_PLUGIN_IDS:
+            if legacy == plugin_id:
+                continue
+            try:
+                old = await sp.get_async("plugin", legacy, key, None)
+            except Exception:
+                old = None
+            if not old:
+                continue
+            try:
+                await sp.put_async("plugin", plugin_id, key, old)
+                if log:
+                    log(
+                        "[coop_bridge] 已从旧命名空间迁移 %s（%d 条）：%s -> %s"
+                        % (key, len(old), legacy, plugin_id)
+                    )
+            except Exception:
+                pass
+            break
